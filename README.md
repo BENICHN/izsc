@@ -4,7 +4,7 @@ A web server that uses puppeteer to generate qr codes for paying with izly
 
 ## How to build :
 
-* Fill-in the values of the `vars.js` file
+* Fill-in the values of the `vars.json` file
 * Run 'node app.js'
 
 ## How to use :
