@@ -11,4 +11,4 @@ A web server that uses puppeteer to generate qr codes for paying with izly
 
 Go to `https://your.domain/?username=your_username&pasword=your_6_digits_password`
 
-To access with a priority add `&p=your_prio_code` to the end of the url
+To access with a priority add `&p=your_prio_code` at the end of the url
