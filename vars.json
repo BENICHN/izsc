@@ -5,9 +5,9 @@
     ],
     "ssl_key": "",
     "ssl_cert": "",
-    "socket_url": "wss://example.com:5678/?",
+    "websocket_url": "wss://example.com:5678/?",
     "server_port": 1234,
-    "socket_port": 5678,
+    "websocket_port": 5678,
     "browser_timeout": 2500,
-    "max_socket_tries": 50
+    "max_websocket_tries": 50
 }
