@@ -10,7 +10,6 @@ var prio_queue = []
 var prio_c = []
 
 var wss = new Map()
-const maxcx = 5
 var cx = 0
 
 const browser = await launch({ args: ['--no-sandbox'] })
@@ -72,14 +71,14 @@ app.get('/', async function (req, res) {
 
     // check numbers of connections and queue
     let process = true
-    if (cx >= maxcx || prio_queue.length > 0) {
+    if (cx >= vars.max_cx || prio_queue.length > 0) {
         if (prio) {
             ws.send(JSON.stringify({
                 msg: 'feu',
                 data: 'r'
             }))
             prio_queue.push(tk)
-            while (cx >= maxcx || prio_queue.indexOf(tk) > 0) {
+            while (cx >= vars.max_cx || prio_queue.indexOf(tk) > 0) {
                 await new Promise(r => setTimeout(r, 100));
             }
             removeItemOnce(prio_queue, tk)
