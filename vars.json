@@ -1,0 +1,13 @@
+{
+    "izly_url": "https://mon-espace.izly.fr/Home/Logon",
+    "prio_codes": [
+        
+    ],
+    "ssl_key": "",
+    "ssl_cert": "",
+    "socket_url": "wss://example.com:5678/?",
+    "server_port": 1234,
+    "socket_port": 5678,
+    "browser_timeout": 2500,
+    "max_socket_tries": 50
+}
