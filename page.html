@@ -182,6 +182,7 @@
   let cont = document.getElementById('cont')
   let thune = document.getElementById('thune')
   let bus = { $bus };
+  let started = false
   if (bus) {
     var feu_r = document.getElementById('bus-r')
     var feu_o = document.getElementById('bus-o')
@@ -213,9 +214,10 @@
         feu_r.style.fillOpacity = r.data == 'r' ? 1 : 0.1
         feu_o.style.fillOpacity = r.data == 'o' ? 1 : 0.1
         feu_g.style.fillOpacity = r.data == 'g' ? 1 : 0.1
-        if (bus || r.data == 'g') {
+        if (!started) {
           cont.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>'
         }
+        started = true
         break
     }
   }

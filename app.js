@@ -7,10 +7,11 @@ import { WebSocketServer } from 'ws'
 const vars = JSON.parse(fs.readFileSync('vars.json'))
 
 var prio_queue = []
-var prio_c = []
-
+var queue = []
+var current_prio_tks = []
+var current_tks = []
+var cx = () => current_prio_tks.length + current_tks.length
 var wss = new Map()
-var cx = 0
 
 const browser = await launch({ args: ['--no-sandbox'] })
 let page = await browser.newPage()
@@ -70,54 +71,64 @@ app.get('/', async function (req, res) {
     }
 
     // check numbers of connections and queue
-    let process = true
-    if (cx >= vars.max_cx || prio_queue.length > 0) {
+    if (cx() >= vars.max_cx) {
+        // attente
+        ws.send(JSON.stringify({
+            msg: 'feu',
+            data: 'r'
+        }))
         if (prio) {
-            ws.send(JSON.stringify({
-                msg: 'feu',
-                data: 'r'
-            }))
+            // cas prio
             prio_queue.push(tk)
-            while (cx >= vars.max_cx || prio_queue.indexOf(tk) > 0) {
-                await new Promise(r => setTimeout(r, 100));
-            }
-            removeItemOnce(prio_queue, tk)
-            prio_c.push(tk)
-            var rmprioc = true
-        } else {
-            process = false
-            if (prio_queue.length > 0 && prio_c.length == 0) {
-                ws.send(JSON.stringify({
-                    msg: 'feu',
-                    data: 'o'
-                }))
-                while (prio_c.length == 0) {
-                    await new Promise(r => setTimeout(r, 100));
+            if (prio_queue.length == 1) { // envoyer orange aux non prios déjà verts si on est la première prio
+                for (const wsc of current_tks.map(t => wss.get(t))) {
+                    wsc.send(JSON.stringify({
+                        msg: 'feu',
+                        data: 'o'
+                    }))
                 }
             }
-            ws.send(JSON.stringify({
-                msg: 'feu',
-                data: 'r'
-            }))
+            while (cx() >= vars.max_cx || prio_queue.indexOf(tk) > 0) { // attendre qu'il n'y ait plus de prios
+                await new Promise(r => setTimeout(r, 100));
+            }
+            current_prio_tks.push(tk)
+            removeItemOnce(prio_queue, tk)
+        } else {
+            // cas pas prio
+            queue.push(tk)
+            while (cx() >= vars.max_cx || prio_queue.length > 0 || queue.indexOf(tk) > 0) { // attendre qu'il n'y ait plus de prios et de non-prios
+                await new Promise(r => setTimeout(r, 100));
+            }
+            current_tks.push(tk)
+            removeItemOnce(queue, tk)
+        }
+    } else {
+        if (prio) {
+            current_prio_tks.push(tk)
+        } else {
+            current_tks.push(tk)
         }
     }
 
     // get qr code
-    if (process) {
-        cx++
-        ws.send(JSON.stringify({
-            msg: 'feu',
-            data: 'g'
-        }))
-        let r = await getQRCode(username, password)
-        ws.send(JSON.stringify({
-            msg: 'qr',
-            data: r ?? "null"
-        }))
-        if (rmprioc) {
-            removeItemOnce(prio_c, tk)
-        }
-        cx--
+    ws.send(JSON.stringify({
+        msg: 'feu',
+        data: 'g'
+    }))
+    let r = await getQRCode(username, password)
+    ws.send(JSON.stringify({
+        msg: 'qr',
+        data: r ?? "null"
+    }))
+    ws.send(JSON.stringify({
+        msg: 'feu',
+        data: 'r'
+    }))
+
+    if (prio) {
+        removeItemOnce(current_prio_tks, tk)
+    } else {
+        removeItemOnce(current_tks, tk)
     }
 
     // close websocket
