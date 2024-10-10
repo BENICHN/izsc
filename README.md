@@ -9,7 +9,7 @@ A web server that uses puppeteer to generate qr codes for paying with izly
 
 ## How to use :
 
-Go to `https://your.domain/?username=your_username&pasword=your_6_digits_password`
+Go to `https://your.domain/?username=your_username&password=your_6_digits_password`
 
 To access with a priority add `&p=your_prio_code` at the end of the url
 
