@@ -167,8 +167,8 @@ async function getQRCode(username, password) {
 
         // get qr code
         await page.$eval('.nav-link[title="Payer"]', el => el.click())
-        await page.waitForSelector('.generateOneQrCode[title="Générer 1 QR Code"]')
-        await page.click('.generateOneQrCode[title="Générer 1 QR Code"]')
+        await page.waitForSelector('button.generateOneQrCode')
+        await page.click('button.generateOneQrCode')
         await page.waitForSelector('.img-fluid')
         let d = await page.$eval('.img-fluid', img => img.getAttribute("src"))
 
