@@ -15,4 +15,4 @@ To access with a priority add `&p=your_prio_code` at the end of the url
 
 Click on the qrcode to reduce its size.
 
-![screen-2023-01-23-19-37-13](https://user-images.githubusercontent.com/26910885/214135197-57b85fd2-ee7c-4c18-b26e-0e298ce85ad5.png)
+![](https://github.com/user-attachments/assets/d9829f61-e84c-46d2-8d72-a604ded4a9f4)
